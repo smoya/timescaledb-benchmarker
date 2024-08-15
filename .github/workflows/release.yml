@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: 'Run tests'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go:
+          - '1.22'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '${{ matrix.go }}'
+      - name: Invoking go test
+        run: |
+          make lint
+          make test
+
+  release:
+    name: 'Release to GitHub and Docker Hub'
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+      - name: Generating binaries
+        run: |
+          BINARY_NAME=smoya_timescaledb-benchmarker.darwin.amd64 GOOS=darwin GOARCH=amd64 make build
+          BINARY_NAME=smoya_timescaledb-benchmarker.darwin.arm64 GOOS=darwin GOARCH=arm64 make build
+          BINARY_NAME=smoya_timescaledb-benchmarker.linux.amd64 GOOS=linux GOARCH=amd64 make build
+          BINARY_NAME=smoya_timescaledb-benchmarker.windows.amd64.exe GOOS=windows GOARCH=amd64 make build
+      - run: docker build --tag smoya/timescaledb-benchmarker .
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Add plugin for conventional commits and docker image push
+        run: npm install conventional-changelog-conventionalcommits @semantic-release-plus/docker
+      - name: Release to GitHub and Docker Hub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          DOCKER_USERNAME: smoya
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          GIT_AUTHOR_NAME: smoya
+          GIT_COMMITTER_NAME: smoya
+        run: npx semantic-release

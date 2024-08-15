@@ -1,0 +1,33 @@
+services:
+  timescaledb-benchmarker:
+    build: ../../.
+    environment:
+      TIMESCALEDB_BENCHMARKER_BENCHMARK_FILE: /data/query_params.csv
+      TIMESCALEDB_BENCHMARKER_BENCHMARK_DB_URI: postgres://postgres:postgres@timescaledb:5432/homework
+      TIMESCALEDB_BENCHMARKER_BENCHMARK_WORKERS: 5
+      TIMESCALEDB_BENCHMARKER_BENCHMARK_DEBUG: true
+    tty: true
+    entrypoint: ['sh'] # in combination with tty: true, keeps the container up and running.
+    volumes:
+      - ../data/query_params.csv:/data/query_params.csv
+    networks:
+      - postgres
+    depends_on:
+      - timescaledb
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: homework
+    volumes:
+      - ../data/cpu_usage.sql:/docker-entrypoint-initdb.d/cpu_usage.sql
+      - ../data/cpu_usage.csv:/docker-entrypoint-initdb.d/cpu_usage.csv
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
