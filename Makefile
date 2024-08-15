@@ -8,11 +8,11 @@ BINARY_NAME?=$(PROJECT_NAME)
 BIN_DIR?=bin
 TOOLS_DIR?=bin/tools
 
-GREEN  := $(shell tput -Txterm setaf 2)
-YELLOW := $(shell tput -Txterm setaf 3)
-WHITE  := $(shell tput -Txterm setaf 7)
-CYAN   := $(shell tput -Txterm setaf 6)
-RESET  := $(shell tput -Txterm sgr0)
+GREEN  := $(shell tput -Txterm setaf 2 2> /dev/null)
+YELLOW := $(shell tput -Txterm setaf 3 2> /dev/null)
+WHITE  := $(shell tput -Txterm setaf 7 2> /dev/null)
+CYAN   := $(shell tput -Txterm setaf 6 2> /dev/null)
+RESET  := $(shell tput -Txterm sgr0 2> /dev/null)
 
 GOLANGCILINT_VERSION = 1.59.1
 
