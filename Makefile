@@ -14,7 +14,7 @@ WHITE  := $(shell tput -Txterm setaf 7 2> /dev/null)
 CYAN   := $(shell tput -Txterm setaf 6 2> /dev/null)
 RESET  := $(shell tput -Txterm sgr0 2> /dev/null)
 
-GOLANGCILINT_VERSION = 1.59.1
+GOLANGCILINT_VERSION = 1.60.1
 
 .PHONY: build lint test coverage help
 
