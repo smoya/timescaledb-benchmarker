@@ -128,6 +128,10 @@ Be aware of the [LICENSE](LICENSE) of this project before submitting your PR.
 Feel free to ping me if you have any doubts or need an onboarding of this project.
 
 ## Contributors
+This project follows [All Contributors](https://allcontributors.org/) for recognizing contributors.
+
+Thanks goes to these people ♥️: 
+
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
