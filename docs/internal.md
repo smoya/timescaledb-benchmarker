@@ -29,6 +29,10 @@ An improvement would be to use Murmur 3 as an alternative as it seems to be a bi
 
 See [this Stack Exchange thread](https://softwareengineering.stackexchange.com/a/145633/450177) to see an amazing comparison of the different algorithms.
 
+## Stats
+I decided to calculate all stats myself instead of using third party dependencies. 
+By doing that, I properly understood the expectations of what the values were supposed to be. Of course, now that there are tests for this part, switching to a third party library will be just straightforward and viable. 
+
 ## Test code coverage
 I didn't find having a 100% of code coverage but I must admit I would increase it in some parts of the code as the [cmd/benchmarker/cmd/select.go](../cmd/benchmarker/cmd/select.go) file. 
 That would require to improve the abstractions and to create others such as one for reading from STDOUT and check that the results are properly printed, etc. I considered this a lot of work for this very first version.
@@ -54,6 +58,7 @@ By disabling this, we give a better DX since the command doesn’t wait endlessl
 - To support other inputs besides CSV.
 - To add support for other DBs.
 - Rate limit for query runners.
+- Stats collector to be a real collector, isolated from the query package, with representation of histograms and its metrics.
 - Add performance tests
 - Track anonymous usage metrics
 - To create its own Helm chart so it can be deployed into K8s, just as I did in, for example: https://github.com/asyncapi-archived-repos/event-gateway/tree/master/deployments/k8s
