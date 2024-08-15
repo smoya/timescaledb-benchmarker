@@ -30,7 +30,7 @@ type Stats struct {
 	// MaxTime is the highest query execution time.
 	MaxTime time.Duration
 
-	// Percentile95th is the 95th percentile, meaning the duration of the 95% of the queries.
+	// Percentile95th is the 95th percentile, meaning the duration of the 95% of the queries take this duration or less.
 	Percentile95th time.Duration
 }
 
