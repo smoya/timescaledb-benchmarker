@@ -12,6 +12,7 @@ services:
       - ../data/query_params.csv:/data/query_params.csv
     networks:
       - postgres
+    container_name: timescaledb-benchmarker
     depends_on:
       - timescaledb
   timescaledb:

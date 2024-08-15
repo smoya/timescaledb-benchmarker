@@ -63,16 +63,16 @@ You can overwrite the default environment variables by using the [--env](https:/
 ### Executing the benchmark
 The benchmarker will use the data from [deployments/data/query_params.csv](deployments/data/query_params.csv) in order to generate the queries for the benchmark.
 
-Please run: 
+Please run the following in a new shell: 
 ```shell
-docker exec docker-compose-timescaledb-benchmarker-1 timescaledb-benchmarker benchmark select
+docker exec timescaledb-benchmarker timescaledb-benchmarker benchmark select
 ```
 
 The [deployments/docker-compose/compose.yml](deployments/docker-compose/compose.yml) file contains the required environment variables set. However, you can overwrite them or add new ones via the `--env` flag.
 
 I.e., if you want to disable the debug log level, please run:
 ```shell
-docker exec --env TIMESCALEDB_BENCHMARKER_BENCHMARK_DEBUG=false docker-compose-timescaledb-benchmarker-1 timescaledb-benchmarker benchmark select
+docker exec --env TIMESCALEDB_BENCHMARKER_BENCHMARK_DEBUG=false timescaledb-benchmarker timescaledb-benchmarker benchmark select
 ```
 
 ## Usage
