@@ -1,0 +1,33 @@
+{
+  "projectName": "timescaledb-benchmarker",
+  "projectOwner": "smoya",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "smoya",
+      "name": "Sergio Moya",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1083296?v=4",
+      "profile": "https://smoya.dev/",
+      "contributions": [
+        "code",
+        "doc",
+        "example",
+        "ideas",
+        "infra",
+        "maintenance",
+        "projectManagement",
+        "research",
+        "test",
+        "tutorial"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
