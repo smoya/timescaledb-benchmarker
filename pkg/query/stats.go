@@ -102,7 +102,7 @@ func (c *DefaultStatsCollector) Stats() Stats {
 	stdDeviation = math.Sqrt(stdDeviation / float64(queriesLen))
 
 	n := time.Duration(float64(queriesLen) * 0.95)
-	percentileIndex := queriesLen
+	percentileIndex := queriesLen - 1
 	for i, duration := range c.durations {
 		if duration > n {
 			percentileIndex = i - 1
