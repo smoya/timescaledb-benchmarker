@@ -65,7 +65,9 @@ func render(t table.Writer, stats query.Stats, config *timescaledb.BenchmarkerCo
 	t.AppendFooter(table.Row{"", "", "Min query time", stats.MinTime})
 	t.AppendFooter(table.Row{"", "", "Median query time", stats.MedianTime})
 	t.AppendFooter(table.Row{"", "", "Average query time", stats.AvgTime})
+	t.AppendFooter(table.Row{"", "", "Standard Deviation query time", stats.StdDeviation})
 	t.AppendFooter(table.Row{"", "", "Max query time", stats.MaxTime})
+	t.AppendFooter(table.Row{"", "", "95th Percentile", stats.Percentile95th})
 
 	switch strings.ToLower(config.OutputFormat) {
 	case timescaledb.FormatCSV:

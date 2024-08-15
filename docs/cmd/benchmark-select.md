@@ -11,6 +11,18 @@ hostname,start_time,end_time
 host_a,2017-12-31 08:59:22,2017-01-01 09:59:22
 ```
 
+The command outputs the **max** cpu usage and **min** cpu usage of the given **hostname** for every minute in the time range specified by the **start time** and **end time**.
+The command also renders the following benchmark stats:
+
+- **Total # Queries**: is the number of executed queries
+- **Time across all queries**: is the execution time since the very first query until the last one.
+- **Min query Time**: is the lowest query execution time.
+- **Median query Time**: is by the duration in the middle, where one half of the durations are higher and the other half are slower.
+- **Avg query Time**: is the sum of all durations divided by the total number of queries.
+- **Standard Deviation query time**: represents how spreads are the values. Higher means data points are spread more widely.
+- **Max query Time**: is the highest query execution time.
+- **95th Percentile query time**: is the 95th percentile, meaning the duration of the 95% of the queries take this duration or less.
+
 ## Usage
 ```shell
 timescaledb_benchmarker benchmark select [command options]
