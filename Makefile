@@ -1,6 +1,6 @@
 # Makefile based on https://gist.github.com/thomaspoignant/5b72d579bd5f311904d973652180c705
 
-GOCMD=GOEXPERIMENT=rangefunc go
+GOCMD=GOEXPERIMENT=rangefunc go # Just in case you run a Go version lower than v1.23.
 GOTEST=$(GOCMD) test
 PROJECT_NAME := $(shell basename "$(PWD)")
 PROJECT_MAIN_DIR=./cmd/benchmarker
@@ -32,7 +32,7 @@ test: ## Run the tests of the project
 	$(GOTEST) -v -race ./...
 
 coverage: ## Run the tests of the project and export the coverage
-	$(GOTEST) -cover -covermode=count -coverprofile=profile.cov ./...
+	$(GOTEST) -race -cover -covermode=atomic -coverprofile=profile.cov ./...
 	$(GOCMD) tool cover -func profile.cov
 
 ## Help:

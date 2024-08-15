@@ -59,7 +59,7 @@ func main() {
 								Name:    "timeout",
 								Aliases: []string{"t"},
 								EnvVars: []string{envVarPrefix + "TIMEOUT"},
-								Value:   time.Millisecond * 100,
+								Value:   time.Millisecond * 200,
 								Usage:   "Timeout for each query. A duration string is a possibly signed sequence of decimal numbers, each with optional fraction and a unit suffix such as \"300ms\", \"-1.5h\" or \"2h45m",
 							},
 							&cli.BoolFlag{
