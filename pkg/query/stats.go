@@ -24,8 +24,14 @@ type Stats struct {
 	// AvgTime is the sum of all durations divided by the total number of queries.
 	AvgTime time.Duration
 
+	// StdDeviation represents how spreads are the values. Higher means data points are spread more widely.
+	StdDeviation time.Duration
+
 	// MaxTime is the highest query execution time.
 	MaxTime time.Duration
+
+	// Percentile95th is the 95th percentile, meaning the duration of the 95% of the queries.
+	Percentile95th time.Duration
 }
 
 // StatsCollector collect stats from query executions.
@@ -86,7 +92,23 @@ func (c *DefaultStatsCollector) Stats() Stats {
 	for _, t := range c.durations {
 		sum += t
 	}
+
 	avg := time.Duration(int(sum) / queriesLen)
+
+	var stdDeviation float64
+	for i := 0; i < len(c.durations); i++ {
+		stdDeviation += math.Pow(float64(c.durations[i]-avg), 2)
+	}
+	stdDeviation = math.Sqrt(stdDeviation / float64(queriesLen))
+
+	n := time.Duration(float64(queriesLen) * 0.95)
+	percentileIndex := queriesLen
+	for i, duration := range c.durations {
+		if duration > n {
+			percentileIndex = i - 1
+		}
+	}
+	percentile95th := c.durations[percentileIndex]
 
 	return Stats{
 		TotalQueries:         queriesLen,
@@ -94,6 +116,8 @@ func (c *DefaultStatsCollector) Stats() Stats {
 		MinTime:              minV,
 		MedianTime:           median,
 		AvgTime:              avg,
+		StdDeviation:         time.Duration(stdDeviation),
 		MaxTime:              maxV,
+		Percentile95th:       percentile95th,
 	}
 }
