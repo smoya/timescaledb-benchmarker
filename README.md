@@ -1,21 +1,18 @@
 # Timescale Benchmarker
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 [![License](https://img.shields.io/github/license/smoya/timescaledb-benchmarker)](https://github.com/smoya/timescaledb-benchmarker/blob/master/LICENSE)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/smoya/timescaledb-benchmarker/.github%2Fworkflows%2Frelease.yml)
 [![last commit](https://img.shields.io/github/last-commit/smoya/timescaledb-benchmarker)](https://github.com/smoya/timescaledb-benchmarker/commits/master)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/smoya/timescaledb-benchmarker)
-[![All Contributors](https://img.shields.io/github/all-contributors/smoya/timescaledb-benchmarker?color=ee8449&style=flat-square)](#contributors)
 
-
-A Benchmarker for TimescaleDB select queries. This is just a demo project and is not meant for production use.
+A Benchmarker for your TimescaleDB instance. This is just a demo project and is not meant for production use.
 
 - [Installation](#installation)
 - [Demo](#demo)
 - [Usage](#usage)
-- [Versioning and maintenance](#versioning-and-maintenance)
 - [Development](#development)
+- [Internal docs](#internal-docs)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
 
@@ -79,52 +76,58 @@ docker exec --env TIMESCALEDB_BENCHMARKER_BENCHMARK_DEBUG=false docker-compose-t
 ```
 
 ## Usage
-This CLI app is split into several commands (at this moment, just one). 
+This CLI app is a binary that offers mainly a CLI GUI, split into several commands.
+Find the docs for each of the commands in [docs/cmd](docs/cmd).
 
-### benchmark select
-Benchmarks SELECT queries. The queries should be in CSV format and contain 3 headers:
+## Development
 
-- `hostname`: string representation of the hostname.
-- `start_time`: date time following the format `<year>-<month>-<day>` representing the start time of the date range used in queries.
-- `end_time`: date time following the format `<year>-<month>-<day>` representing the end time of the date range used in queries.
+### Prerequisites
+- [Go v1.23](https://go.dev/dl/) or higher. 
+  - If you are in `v1.22`,  I recommend enabling the [rangefunc experiment](https://go.dev/wiki/RangefuncExperiment).
+- Optional: Docker. Used for building and running the CLI app in an isolated env.
+  - Additionally, there is a [compose.yml](deployments/docker-compose/compose.yml) that spins up this app plus a TimescaleDB DB instance (including fixtures). More info on the [Demo](#demo) section.
 
-Example:
-```csv
-hostname,start_time,end_time
-host_a,2017-12-31 08:59:22,2017-01-01 09:59:22
-```
+#### Build
+A dedicated [Makefile](Makefile) target is available:
 
-#### Usage 
 ```shell
-timescaledb_benchmarker benchmark select [command options]
+make build
 ```
 
-#### Config
-| Flag            | Alias | Env var                                         | Description                                                                                                                                             | format                      | Required | Default     | Example                                                            |
-|-----------------|-------|-------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|----------|-------------|--------------------------------------------------------------------|
-| --file          | -f    | TIMESCALEDB_BENCHMARKER_BENCHMARK_FILE          | Path to a csv file containing raw query fields (format as specified above)                                                                              | file path                   | No       | STDIN input | -f /data/query_params.csv                                          |
-| --db_uri        |       | TIMESCALEDB_BENCHMARKER_BENCHMARK_DB_URI        | TimescaleDB Connection URI                                                                                                                              | Postgres Conn URI           | Yes      |             | --db_uri postgres://username:password@localhost:5432/database_name |
-| --workers       | -w    | TIMESCALEDB_BENCHMARKER_BENCHMARK_WORKERS       | Number of query workers executing Queries concurrently. Different from Postgress pool size, which can be configured in parallel through the db_uri flag | uint                        | No       | 5           | -w 10                                                              |
-| --timeout       | -t    | TIMESCALEDB_BENCHMARKER_BENCHMARK_TIMEOUT       | Timeout for each query. A string with is a sequence of decimal numbers, each with optional fraction and a unit suffix such as `300ms`, or `2h45m`       | Duration as string          | No       | 200ms       | -t 400ms                                                           |
-| --debug         | -d    | TIMESCALEDB_BENCHMARKER_BENCHMARK_DEBUG         | Debug mode. Enable it for printing debug logs                                                                                                           | boolean                     | No       | false       | -d true                                                            |
-| --output_format |       | TIMESCALEDB_BENCHMARKER_BENCHMARK_OUTPUT_FORMAT | Output print format. By default, human readable output for printing in the console                                                                      | enum[human,csv,tsv,md,html] | No       | human       | --output-format md                                                 |
+You will find the compiled binary under [bin/out](bin/out) directory.
 
-#### Example
+#### Lint
+[golangci-lint](https://golangci-lint.run/) is used for linting the code. A dedicated [Makefile](Makefile) target is available:
+
 ```shell
-timescaledb_benchmarker benchmark select -f /data/query_params.csv --db_uri postgres://username:password@localhost:5432/database_name
+make lint
 ```
 
-> [!TIP]
-> You can redirect or pipe any CSV (without specifying the --file or -f flags). 
-> Useful for many use cases, as requesting the file from the Internet, from a result of a command, etc.
-> 
-> Examples:
-> - `timescaledb_benchmarker benchmark select --db-uri ${DB_URI} < /data/query_params.csv`
-> - `curl -s https://example.com/csv_file.csv | timescaledb_benchmarker benchmark select --db-uri ${DB_URI}`
+### Test
+Unit tests are available for each .go file. [Testify](github.com/stretchr/testify) toolkit is installed and in use.
 
+There are **two** [Makefile](Makefile) targets:
+
+1. `make test`, which runs all tests with the native go race condition detector.
+2. `make coverage`, which runs all tests as `make test` does plus it shows up code coverage statistics.
+
+### Releases
+Releases are handled automatically on each push to the `main` branch via [Semantic Release](https://semantic-release.gitbook.io/semantic-release).
+Commits are following [Conventional Commits](https://www.conventionalcommits.org/), and releases will only happen when commits have certain prefixes:
+- `feat`: a [MINOR](http://semver.org/#summary) release will happen. Example: `feat: add a new feature`.
+- `fix`: a [PATCH](http://semver.org/#summary) release will happen. Example: `fix: add a new fix`.
+- any of the previous with a `!` suffix: a [MAJOR](http://semver.org/#summary) release will happen. Example: `feat!: add a new breaking change`.
+
+## Internal docs
+A set of internal docs and design decisions can be found in [docs/internal.md](docs/internal.md). If you want to know why some things are like they are, that is for you.
+
+## Contributing
+Contributions are always encouraged! Please submit your PR's or issues. Tag or assign any of the [code owners](CODEOWNERS) (at this moment, only me: @smoya) as reviewers.
+Be aware of the [LICENSE](LICENSE) of this project before submitting your PR.
+
+Feel free to ping me if you have any doubts or need an onboarding of this project.
 
 ## Contributors
-
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
