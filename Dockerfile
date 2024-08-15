@@ -1,5 +1,5 @@
 FROM golang:1.22-alpine AS builder
-RUN apk add make
+RUN apk add make ncurses #ncurses installs tput, for having nice terminal colors
 WORKDIR /go/src/timescaledb-benchmarker
 COPY go.mod .
 COPY go.sum .
