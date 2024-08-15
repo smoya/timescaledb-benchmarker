@@ -8,13 +8,13 @@ plugins:
     - preset: conventionalcommits
   - - "@semantic-release/github"
     - assets:
-        - path: ../bin/out/smoya_timescaledb-benchmarker.darwin.amd64
+        - path: bin/out/smoya_timescaledb-benchmarker.darwin.amd64
           label: Binary - Darwin AMD64 (Apple Intel)
-        - path: ../bin/out/smoya_timescaledb-benchmarker.darwin.arm64
+        - path: bin/out/smoya_timescaledb-benchmarker.darwin.arm64
           label: Binary - Darwin ARM64 (Apple Silicon)
-        - path: ../bin/out/smoya_timescaledb-benchmarker.linux.amd64
+        - path: bin/out/smoya_timescaledb-benchmarker.linux.amd64
           label: Binary - Linux AMD64
-        - path: ../bin/out/smoya_timescaledb-benchmarker.darwin.arm64
+        - path: bin/out/smoya_timescaledb-benchmarker.windows.amd64.exe
           label: Binary - Windows AMD64
   - - "@semantic-release-plus/docker"
     - name: smoya/timescaledb-benchmarker
